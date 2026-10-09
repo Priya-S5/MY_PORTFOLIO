@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NHANES Data Analysis Using NumPy and Matplotlib — exploratory health data analysis, statistical insights, feature engineering, and visualizations.">
+<title>NHANES Data Analysis | Research Project</title>
+
+<style>
+:root{--bg:#070a18;--panel:#10152c;--line:rgba(133,119,255,.35);--text:#eef2ff;--muted:#b8c2e8;--cyan:#63e7ff;--pink:#f58cff;--violet:#9a7bff;--max:1180px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.65}
+a{color:var(--cyan);text-decoration:none}
+a:hover{color:var(--pink)}
+.nav{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:16px max(5%,calc((100% - var(--max))/2));background:rgba(7,10,24,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.brand{font-weight:800;letter-spacing:1px;color:var(--text);white-space:nowrap}
+.nav div:last-child{display:flex;flex-wrap:wrap;gap:18px;font-size:13px}
+.wrap{width:min(var(--max),90%);margin:auto}
+.hero{padding:76px 0 60px;display:grid;grid-template-columns:1.1fr .9fr;gap:42px;align-items:center}
+.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.hero h1{font-size:clamp(36px,5vw,62px);line-height:1.08;margin:16px 0}
+.subtitle{color:var(--muted);font-size:17px;max-width:650px}
+.hero-image{width:100%;border:1px solid var(--line);border-radius:22px;box-shadow:0 0 45px rgba(99,231,255,.08);display:block}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:25px}
+.btn{display:inline-block;padding:11px 17px;border:1px solid var(--line);border-radius:10px;color:var(--text);font-weight:700;font-size:13px}
+.btn.primary{background:linear-gradient(120deg,var(--violet),#596dff);border-color:transparent;color:white}
+.btn.secondary{background:rgba(255,255,255,.025)}
+section{padding:54px 0;scroll-margin-top:80px}
+.section-kicker{font-size:12px;color:var(--pink);font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h2{font-size:clamp(27px,3vw,38px);line-height:1.2;margin:10px 0 18px}
+h3{margin:12px 0;font-size:19px}
+.lead{max-width:800px;color:var(--muted);font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:26px}
+.card{background:linear-gradient(145deg,rgba(16,21,44,.98),rgba(12,16,35,.98));border:1px solid var(--line);border-radius:17px;padding:23px;min-width:0}
+.icon{font-size:25px;color:var(--cyan)}
+.card p{color:var(--muted);font-size:14px;margin-bottom:0}
+.muted{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.chip{font-size:12px;padding:6px 10px;border:1px solid var(--line);border-radius:20px;color:var(--cyan);background:rgba(99,231,255,.04)}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:25px}
+.step{position:relative}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.chart{width:100%;height:auto;display:block;background:rgba(5,9,24,.55);border:1px solid var(--line);border-radius:12px;margin-top:16px}
+.code{white-space:pre-wrap;overflow-wrap:anywhere;overflow-x:auto;background:#080d20;border:1px solid var(--line);border-radius:12px;padding:20px;color:#b9f5ff;font-size:13px;line-height:1.7}
+.callout{padding:18px 20px;border-left:3px solid var(--pink);background:rgba(245,140,255,.06);border-radius:0 12px 12px 0;color:var(--muted)}
+.footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:13px}
+.small{font-size:12px;color:var(--muted)}
+.toplink{position:fixed;bottom:22px;right:22px;background:var(--panel);border:1px solid var(--line);padding:10px 14px;border-radius:10px;z-index:5}
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:48px}.grid,.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.twocol{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column}.nav div:last-child{gap:12px}}
+@media(max-width:520px){.grid,.steps{grid-template-columns:1fr}.hero h1{font-size:38px}.nav div:last-child{font-size:12px}.card{padding:19px}}
+</style>
+</head>
+
+<body id="top">
+
+<nav class="nav">
+  <a class="brand" href="#top">✦ DATA LAB</a>
+  <div>
+    <a href="index.html">Portfolio</a>
+    <a href="#overview">Overview</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#methods">Methods</a>
+    <a href="#stack">Tech Stack</a>
+    <a href="#notes">Project Notes</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Data Science · Exploratory Analysis</div>
+      <h1>NHANES<br>Health Data Analysis</h1>
+      <p class="subtitle">
+        Exploring health and body measurement data with NumPy and Matplotlib.
+        This project focuses on data preprocessing, statistical analysis,
+        feature engineering, and visual storytelling to uncover meaningful
+        patterns in health-related data.
+      </p>
+
+      <div class="chips">
+        <span class="chip">Python</span>
+        <span class="chip">NumPy</span>
+        <span class="chip">Matplotlib</span>
+        <span class="chip">EDA</span>
+        <span class="chip">Feature Engineering</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/Priya-S5/NHANES-Data-Analysis" target="_blank" rel="noopener noreferrer">View GitHub Project ↗</a>
+        <a class="btn secondary" href="#overview">Explore Research ↓</a>
+      </div>
+    </div>
+
+    <div>
+      <img
+        class="hero-image"
+        src="Neon NHANES Health Data Analysis Dashboard.png"
+        alt="NHANES health data analysis dashboard visualization"
+      >
+    </div>
+  </header>
+
+  <section id="overview">
+    <div class="section-kicker">01 / Overview</div>
+    <h2>Turning health data into insights</h2>
+    <p class="lead">
+      This project uses NHANES body measurement data to practice practical
+      data analysis. NumPy supports data handling and transformations, while
+      Matplotlib helps communicate distributions, relationships, and patterns
+      through visualizations.
+    </p>
+
+    <div class="grid">
+      <article class="card">
+        <div class="icon">⌁</div>
+        <h3>Data Preparation</h3>
+        <p>
+          Worked with body measurement data and used NumPy for numerical
+          data handling, preprocessing, and preparing variables for analysis.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">▥</div>
+        <h3>Statistical Exploration</h3>
+        <p>
+          Explored distributions and relationships between measurements
+          using statistical analysis, correlation, and standardization.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">✧</div>
+        <h3>Feature Engineering</h3>
+        <p>
+          Derived additional health-related features, including BMI,
+          waist-to-height ratio, and waist-to-hip ratio, for further exploration.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="workflow">
+    <div class="section-kicker">02 / Workflow</div>
+    <h2>From raw data to visual insights</h2>
+    <p class="lead">
+      A structured exploratory data analysis workflow connects data
+      preparation, statistical transformations, and visualization.
+    </p>
+
+    <div class="steps">
+      <article class="card step">
+        <div class="icon">01</div>
+        <h3>Prepare the Data</h3>
+        <p>
+          Load and inspect the body measurement dataset, identify the
+          variables of interest, and prepare numerical data using NumPy.
+        </p>
+      </article>
+
+      <article class="card step">
+        <div class="icon">02</div>
+        <h3>Analyze Variables</h3>
+        <p>
+          Explore statistical distributions, investigate correlations,
+          standardize values where useful, and engineer derived features.
+        </p>
+      </article>
+
+      <article class="card step">
+        <div class="icon">03</div>
+        <h3>Visualize Findings</h3>
+        <p>
+          Use Matplotlib to create histograms, boxplots, and scatterplot
+          matrices to help interpret distributions and relationships.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="methods">
+    <div class="section-kicker">03 / Analytical Methods</div>
+    <h2>Explore patterns, not just numbers</h2>
+    <p class="lead">
+      Exploratory analysis helps reveal the shape of individual variables
+      and how multiple measurements may relate to one another.
+    </p>
+
+    <div class="twocol">
+      <article class="card">
+        <div class="icon">▤</div>
+        <h3>Distribution Analysis</h3>
+        <p>
+          Histograms help inspect how values are distributed. Boxplots
+          provide a compact view of the median, spread, and potential
+          unusually distant observations.
+        </p>
+
+        <svg class="chart" viewBox="0 0 440 245" role="img" aria-label="Illustrative histogram showing a distribution of health measurements">
+          <defs>
+            <linearGradient id="histGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#63e7ff"/>
+              <stop offset="100%" stop-color="#9a7bff"/>
+            </linearGradient>
+          </defs>
+          <g stroke="#293153" stroke-width="1">
+            <line x1="48" y1="45" x2="410" y2="45"/>
+            <line x1="48" y1="85" x2="410" y2="85"/>
+            <line x1="48" y1="125" x2="410" y2="125"/>
+            <line x1="48" y1="165" x2="410" y2="165"/>
+            <line x1="48" y1="205" x2="410" y2="205"/>
+          </g>
+          <g fill="url(#histGradient)" opacity=".9">
+            <rect x="58" y="179" width="29" height="26" rx="3"/>
+            <rect x="92" y="151" width="29" height="54" rx="3"/>
+            <rect x="126" y="117" width="29" height="88" rx="3"/>
+            <rect x="160" y="81" width="29" height="124" rx="3"/>
+            <rect x="194" y="59" width="29" height="146" rx="3"/>
+            <rect x="228" y="91" width="29" height="114" rx="3"/>
+            <rect x="262" y="125" width="29" height="80" rx="3"/>
+            <rect x="296" y="151" width="29" height="54" rx="3"/>
+            <rect x="330" y="174" width="29" height="31" rx="3"/>
+            <rect x="364" y="188" width="29" height="17" rx="3"/>
+          </g>
+          <g fill="#b8c2e8" font-size="10">
+            <text x="48" y="226">Lower values</text>
+            <text x="330" y="226">Higher values</text>
+            <text x="48" y="25" fill="#63e7ff" font-size="12">Illustrative distribution</text>
+          </g>
+        </svg>
+
+        <p class="small">
+          Conceptual illustration only — this chart is not a measured result
+          from the NHANES dataset.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">⌗</div>
+        <h3>Relationship Analysis</h3>
+        <p>
+          Correlation analysis and scatterplots help investigate how
+          measurement variables move together and whether relationships
+          appear positive, negative, or weak.
+        </p>
+
+        <svg class="chart" viewBox="0 0 440 245" role="img" aria-label="Illustrative scatterplot showing a possible relationship between two measurements">
+          <g stroke="#293153" stroke-width="1">
+            <line x1="52" y1="45" x2="52" y2="205"/>
+            <line x1="52" y1="205" x2="405" y2="205"/>
+            <line x1="52" y1="165" x2="405" y2="165"/>
+            <line x1="52" y1="125" x2="405" y2="125"/>
+            <line x1="52" y1="85" x2="405" y2="85"/>
+          </g>
+          <path d="M70 188 L390 62" stroke="#f58cff" stroke-width="2" stroke-dasharray="6 6" fill="none" opacity=".8"/>
+          <g fill="#63e7ff">
+            <circle cx="78" cy="183" r="4"/>
+            <circle cx="104" cy="169" r="4"/>
+            <circle cx="125" cy="178" r="4"/>
+            <circle cx="146" cy="145" r="4"/>
+            <circle cx="167" cy="155" r="4"/>
+            <circle cx="187" cy="129" r="4"/>
+            <circle cx="211" cy="143" r="4"/>
+            <circle cx="230" cy="111" r="4"/>
+            <circle cx="251" cy="122" r="4"/>
+            <circle cx="274" cy="91" r="4"/>
+            <circle cx="298" cy="104" r="4"/>
+            <circle cx="321" cy="75" r="4"/>
+            <circle cx="347" cy="82" r="4"/>
+            <circle cx="372" cy="59" r="4"/>
+          </g>
+          <g fill="#b8c2e8" font-size="10">
+            <text x="52" y="226">Measurement A</text>
+            <text x="52" y="25" fill="#63e7ff" font-size="12">Illustrative relationship</text>
+          </g>
+        </svg>
+
+        <p class="small">
+          Conceptual illustration only — points and trend line do not represent
+          actual calculated correlations from the dataset.
+        </p>
+      </article>
+    </div>
+
+    <div class="callout" style="margin-top:18px">
+      <strong>Analytical focus:</strong> Visual patterns can help generate
+      hypotheses, but correlation alone does not establish causation.
+      Actual findings should be interpreted in the context of the dataset,
+      variable definitions, and data quality.
+    </div>
+  </section>
+
+  <section id="noise">
+    <div class="section-kicker">04 / Visualization Methods</div>
+    <h2>Visual tools for exploratory analysis</h2>
+    <p class="lead">
+      Different visualization types answer different questions. Using them
+      together makes the analysis more informative than relying on a single
+      chart.
+    </p>
+
+    <div class="grid">
+      <article class="card">
+        <div class="icon">▥</div>
+        <h3>Histograms</h3>
+        <p>
+          Examine the frequency and shape of body measurement distributions,
+          including concentration, spread, and possible skewness.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">⊟</div>
+        <h3>Boxplots</h3>
+        <p>
+          Compare medians and variability, and identify observations that
+          may warrant further data-quality investigation.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">⠿</div>
+        <h3>Scatterplot Matrices</h3>
+        <p>
+          Inspect pairwise relationships among selected numeric variables
+          and look for patterns that merit deeper statistical analysis.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="section-kicker">05 / Tech Stack</div>
+    <h2>Tools behind the analysis</h2>
+    <p class="lead">
+      The project uses Python's numerical computing and visualization
+      ecosystem to explore structured health measurement data.
+    </p>
+
+    <div class="grid">
+      <article class="card">
+        <div class="icon">🐍</div>
+        <h3>Python</h3>
+        <p>The primary programming language for data analysis and scripting.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">∑</div>
+        <h3>NumPy</h3>
+        <p>Numerical operations, array handling, preprocessing, and transformations.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">▥</div>
+        <h3>Matplotlib</h3>
+        <p>Visual exploration through histograms, boxplots, and scatterplots.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">⌕</div>
+        <h3>Exploratory Data Analysis</h3>
+        <p>Investigating distributions, data patterns, and relationships between variables.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">↗</div>
+        <h3>Feature Engineering</h3>
+        <p>Creating derived variables such as BMI and waist measurement ratios.</p>
+      </article>
+
+      <article class="card">
+        <div class="icon">⌘</div>
+        <h3>GitHub</h3>
+        <p>Project code repository and a place to review the implementation.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="example">
+    <div class="section-kicker">06 / Code Example</div>
+    <h2>Example: deriving health-related features</h2>
+    <p class="lead">
+      The following Python example illustrates how NumPy can be used to
+      calculate BMI and waist-to-height ratio from measurement arrays.
+      Replace the sample values with appropriately cleaned dataset columns
+      when running the analysis.
+    </p>
+
+    <pre class="code"><code>import numpy as np
+import matplotlib.pyplot as plt
+
+# Illustrative measurements only.
+# Replace these values with cleaned NHANES data columns.
+height_cm = np.array([170, 165, 180, 158, 175], dtype=float)
+weight_kg = np.array([68, 60, 82, 54, 75], dtype=float)
+waist_cm = np.array([82, 74, 94, 68, 88], dtype=float)
+
+# Convert height from centimetres to metres
+height_m = height_cm / 100
+
+# Derive BMI
+bmi = weight_kg / (height_m ** 2)
+
+# Derive waist-to-height ratio
+waist_to_height = waist_cm / height_cm
+
+# Inspect the derived features
+print("BMI:", np.round(bmi, 2))
+print("Waist-to-height ratio:",
+      np.round(waist_to_height, 3))
+
+# Visualize the BMI distribution
+plt.hist(bmi, bins=5, edgecolor="black")
+plt.xlabel("BMI")
+plt.ylabel("Frequency")
+plt.title("BMI Distribution — Illustrative Data")
+plt.tight_layout()
+plt.show()</code></pre>
+
+    <div class="callout" style="margin-top:18px">
+      <strong>Important:</strong> The values in this snippet are illustrative,
+      not actual NHANES participant records. For real analysis, confirm
+      units, handle missing or invalid values, and follow the dataset's
+      documentation before calculating derived features.
+    </div>
+  </section>
+
+  <section id="notes">
+    <div class="section-kicker">07 / Project Notes</div>
+    <h2>What this project demonstrates</h2>
+    <p class="lead">
+      This project brings together core data analysis skills: numerical
+      preprocessing, descriptive exploration, feature engineering, and
+      communicating patterns through visualization.
+    </p>
+
+    <div class="twocol">
+      <article class="card">
+        <h3>Key Work</h3>
+        <p>
+          • Explored NHANES body measurement data.<br>
+          • Used NumPy for data handling and preprocessing.<br>
+          • Applied statistical analysis, correlation, and standardization.<br>
+          • Engineered BMI, waist-to-height, and waist-to-hip ratios.<br>
+          • Created histograms, boxplots, and scatterplot matrices using Matplotlib.
+        </p>
+      </article>
+
+      <article class="card">
+        <h3>Skills Applied</h3>
+        <p>
+          • Python programming<br>
+          • Numerical data manipulation<br>
+          • Exploratory data analysis<br>
+          • Statistical thinking<br>
+          • Feature engineering<br>
+          • Data visualization and interpretation
+        </p>
+      </article>
+    </div>
+
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/Priya-S5/NHANES-Data-Analysis" target="_blank" rel="noopener noreferrer">Explore Source Code ↗</a>
+      <a class="btn secondary" href="#top">Back to Top ↑</a>
+    </div>
+
+    <p class="small">
+      Project repository:
+      <a href="https://github.com/Priya-S5/NHANES-Data-Analysis" target="_blank" rel="noopener noreferrer">NHANES Data Analysis Using NumPy and Matplotlib</a>
+    </p>
+  </section>
+
+  <footer class="footer">
+    <div>✦ NHANES Health Data Analysis</div>
+    <p>
+      An exploratory data analysis project using Python, NumPy, and Matplotlib.
+    </p>
+    <p class="small">Built for learning, research, and data-driven exploration.</p>
+  </footer>
+
+</main>
+
+<a class="toplink" href="#top">↑ Top</a>
+
+</body>
+</html>
