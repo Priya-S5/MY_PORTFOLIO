@@ -483,7 +483,62 @@ plt.show()</code></pre>
 
 </main>
 
-<a class="toplink" href="#top">↑ Top</a>
+
+
+<a href="#" class="logo">
+  <img src="Leo-Queen-logo.png" alt="Logo">
+  
+</a>
+
+<style>
+.logo {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: block;
+  overflow: hidden;
+  transition: 0.3s ease;
+  box-shadow: 0 0 10px #a855f7;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Hover shine effect */
+.logo:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 15px #a855f7,
+              0 0 30px #22d3ee,
+              0 0 45px #ec4899;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.9),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+.logo:hover::after {
+  left: 150%;
+}
+</style>
 
 </body>
 </html>

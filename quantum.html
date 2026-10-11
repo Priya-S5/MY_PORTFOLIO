@@ -31,7 +31,60 @@ qc.measure([0, 1], [0, 1])
 print(qc)</code></pre></section>
 <section id="notes"><div class="section-kicker">07 / Project notes</div><h2>What this project explores</h2><div class="card"><ul><li>Educational explanation of NISQ-era quantum noise and circuit behavior.</li><li>Conceptual comparison of ideal and noisy results.</li><li>Introduction to Circuit Folding and Zero-Noise Extrapolation.</li><li>Visual communication of quantum computing concepts for learners and researchers.</li></ul><p class="small">The generated cover art and charts on this page are illustrative. Confirmed implementation details, live controls, measured results, and backend libraries should be documented only after checking the source code or testing the deployed application.</p><div class="actions"><a class="btn primary" href="https://quantumnoise.lovable.app/" target="_blank" rel="noopener">Open Live Project ↗</a><a class="btn secondary" href="#top">Back to Top ↑</a></div></div></section>
 <footer class="footer"><span>⚛ Quantum Noise &amp; Error Modeling</span><span>Educational project showcase · Responsive HTML</span></footer>
-</main><a class="toplink" href="#top" aria-label="Back to top">↑ Top</a>
+</main>
+<a href="#" class="logo">
+  <img src="Leo-Queen-logo.png" alt="Logo">
+</a>
+
+<style>
+.logo {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: block;
+  overflow: hidden;
+  transition: 0.3s ease;
+  box-shadow: 0 0 10px #a855f7;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Hover shine effect */
+.logo:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 15px #a855f7,
+              0 0 30px #22d3ee,
+              0 0 45px #ec4899;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.9),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+.logo:hover::after {
+  left: 150%;
+}
+</style>
 </body></html>
 
 
