@@ -1,4 +1,4 @@
-https://priya-s5.github.io/Anchored-in-Light/
+https://priya-s5.github.io/MY_PORTFOLIO/
 # Priya's Portfolio 🌐✨
 
 Welcome to my portfolio! 🚀  
